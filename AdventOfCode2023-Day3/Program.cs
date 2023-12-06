@@ -1,20 +1,30 @@
 ﻿using AdventOfCode2023_Day3;
 
-string path = @"C:\Users\Ugo est nul\Desktop\Prog\C#\AdventOfCode2023\AdventOfCode2023-Day3\TestValue.txt";
+string path = @"C:\Users\Ugo est nul\Desktop\Prog\C#\AdventOfCode2023\AdventOfCode2023-Day3\Sample.txt";
 
 List<string> inputs = GetFileContent(path);
 
 Elements[,] elements = TransformToArray(inputs);
+
+for(int i = 0; i < elements.GetLength(0); i++ ) {
+    for(int j = 0; j < elements.GetLength(1); j++)
+        Console.Write( elements[i,j].Element );
+    Console.WriteLine("");
+}
 
 List<int> numbers = GetNumbersFromArray(elements);
 
 int sum = 0;
 
 foreach( int number in numbers ) {
-
+    //for( int i = 0; i < elements.GetLength( 0 ); i++ ) {
+    //    for( int j = 0; j < elements.GetLength( 1 ); j++ )
+    //        Console.Write( elements[i, j].Element );
+    //    Console.WriteLine( "" );
+    //}
     sum += number;
-    Console.WriteLine(number);
 }
+
 
 Console.WriteLine(sum);
 
@@ -68,12 +78,6 @@ List<int> GetNeighborsNumber( Elements element, Elements[,] elements ) {
     int posX = element.PosX;
     int posY = element.PosY;
 
-    //if( elements[posX - 1, posY - 1].IsNumber ) //NW
-    //    numbers.Add( GetNumber( elements[posX - 1, posY - 1].Element, elements, posX - 1, posY - 1 ) );
-
-    //if( elements[posX - 1, posY].IsNumber ) // N
-    //    numbers.Add( GetNumber( elements[posX - 1, posY].Element, elements, posX - 1, posY ) );
-
     if( posX - 1 >= 0 && posY - 1 >= 0 && elements[posX - 1, posY - 1].IsNumber ) // NW
         numbers.Add( GetNumber( elements[posX - 1, posY - 1].Element, elements, posX - 1, posY - 1 ) );
 
@@ -104,20 +108,27 @@ List<int> GetNeighborsNumber( Elements element, Elements[,] elements ) {
 static int GetNumber( string element, Elements[,] elements, int i, int j ) {
 
     string number;
-
+    int jLeft = j - 1;
+    int jRight = j + 1;
     number = element;
-    while( elements[i - 1, j].IsNumber || elements[i, j + 1].IsNumber ) {
+    elements[i, j].Element = " ";
+    while( jLeft >= 0 && elements[i, jLeft].IsNumber)
+        if( elements[i, jLeft].IsNumber ) {
 
-        if( elements[i - 1, j].IsNumber ) {
+            number = String.Concat( elements[ i, jLeft ].Element, number );
+            elements[i, jLeft].Element = " ";
+            elements[i, jLeft].IsNumber = false;
+            jLeft--;
+        }
 
-            number = String.Concat( elements[i - 1, j].Element, number );
-            i--;
+    while( jRight <= elements.GetLength( 0 ) && elements[i, jRight].IsNumber )
+        if( elements[i, jRight].IsNumber ) {
+            number = String.Concat( number, elements[i, jRight].Element);
+            elements[i, jRight].Element = " ";
+            elements[i, jRight].IsNumber = false;
+            jRight++;
         }
-        if( elements[i, j + 1].IsNumber ) {
-            number = String.Concat( number, elements[i, j + 1].Element);
-            j++;
-        }
-    }
+
     return int.Parse( number );
 }
 
