@@ -15,6 +15,7 @@ namespace AdventOfCode2023_Day3 {
 
             switch (elem) {
 
+                case '0':
                 case '1':
                 case '2':
                 case '3':
@@ -28,6 +29,10 @@ namespace AdventOfCode2023_Day3 {
                     break;
                 case ' ':
                     break;
+                case '*':
+                    IsGear = true;
+                    IsSymbol = true;
+                    break;
                 default:
                     IsSymbol = true; 
                     break;
@@ -37,6 +42,7 @@ namespace AdventOfCode2023_Day3 {
         public string Element { get; set; }
         public bool IsNumber { get; set; }
         public bool IsSymbol { get; set; }
+        public bool IsGear { get; set; }
         public int PosX { get; set; }
         public int PosY { get; set; }
 

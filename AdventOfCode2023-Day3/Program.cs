@@ -6,22 +6,12 @@ List<string> inputs = GetFileContent(path);
 
 Elements[,] elements = TransformToArray(inputs);
 
-for(int i = 0; i < elements.GetLength(0); i++ ) {
-    for(int j = 0; j < elements.GetLength(1); j++)
-        Console.Write( elements[i,j].Element );
-    Console.WriteLine("");
-}
-
-List<int> numbers = GetNumbersFromArray(elements);
+// List<int> numbers = GetNumbersFromArray(elements); // Part1
+List<int> numbers = GetNumbersFromArray( elements );
 
 int sum = 0;
 
 foreach( int number in numbers ) {
-    //for( int i = 0; i < elements.GetLength( 0 ); i++ ) {
-    //    for( int j = 0; j < elements.GetLength( 1 ); j++ )
-    //        Console.Write( elements[i, j].Element );
-    //    Console.WriteLine( "" );
-    //}
     sum += number;
 }
 
@@ -59,17 +49,30 @@ Elements[,] TransformToArray( List<string> inputs ) {
 List<int> GetNumbersFromArray( Elements[,] elements ) {
 
     List <int> numbers = new();
+    List <int> mults = new();
+    int mult = 1;
 
-    foreach( Elements element in elements )
-        if( element.IsSymbol )
-            try {
-                numbers.AddRange( GetNeighborsNumber( element, elements ) );
-            }
-            catch( Exception ex ) {
-                Console.WriteLine( "Out of bound : " + ex.ToString() );
-            }
+    foreach( Elements element in elements ) {
 
-    return numbers;
+        //if( element.IsSymbol ) // Part1
+            //numbers.AddRange( GetNeighborsNumber( element, elements ) );
+        if(element.IsGear) // Part2
+            numbers.AddRange(GetNeighborsNumber(element, elements));
+
+        if(numbers.Count == 2 ) {
+
+            mult = 1;
+            foreach( int number in numbers )
+                mult *= number;
+
+            mults.Add( mult );
+        }
+
+        numbers.Clear();
+    }
+    
+    return mults;
+    
 }
 
 List<int> GetNeighborsNumber( Elements element, Elements[,] elements ) {
@@ -110,20 +113,23 @@ static int GetNumber( string element, Elements[,] elements, int i, int j ) {
     string number;
     int jLeft = j - 1;
     int jRight = j + 1;
+
     number = element;
     elements[i, j].Element = " ";
-    while( jLeft >= 0 && elements[i, jLeft].IsNumber)
+    elements[i, j].IsNumber = false;
+
+    while( jLeft >= 0 && elements[i, jLeft].IsNumber )
         if( elements[i, jLeft].IsNumber ) {
 
-            number = String.Concat( elements[ i, jLeft ].Element, number );
+            number = String.Concat( elements[i, jLeft].Element, number );
             elements[i, jLeft].Element = " ";
             elements[i, jLeft].IsNumber = false;
             jLeft--;
         }
 
-    while( jRight <= elements.GetLength( 0 ) && elements[i, jRight].IsNumber )
+    while( jRight < elements.GetLength( 0 ) && elements[i, jRight].IsNumber )
         if( elements[i, jRight].IsNumber ) {
-            number = String.Concat( number, elements[i, jRight].Element);
+            number = String.Concat( number, elements[i, jRight].Element );
             elements[i, jRight].Element = " ";
             elements[i, jRight].IsNumber = false;
             jRight++;
