@@ -4,12 +4,13 @@ string path = @"C:\Users\Ugo est nul\Desktop\Prog\C#\AdventOfCode2023\AdventOfCo
 
 string input = GetFileContent(path);
 
-IEnumerable<int> seeds = ParseSeedsFromInput(input);
-IEnumerable<int> location;
+List<int> seeds = ParseSeedsFromInput(input);
+List<Maps> maps = ParseMapsFromInput(input);
+List<int> location = new();
 
 foreach(int seed in seeds ) {
 
-    location = GetLocation(ParseMapsFromInput(input), seed);
+    location.Add(GetLocation(maps, seed));
 }
 
 Console.WriteLine(location.Min());
@@ -28,25 +29,35 @@ static string GetFileContent( string path ) {
     return inputs;
 }
 
-IEnumerable<int> ParseSeedsFromInput( string input ) {
+List<int> ParseSeedsFromInput( string input ) {
 
+    List<int> seeds = new();
     string[] seedsValue = input.Split("\n")[0].Split(": ")[1].Split(' ');
 
     foreach( string seed in seedsValue )
-        yield return int.Parse(seed);
+        seeds.Add(int.Parse(seed));
+
+    return seeds;
 }
 
-IEnumerable<Maps> ParseMapsFromInput( string input ) {
+List<Maps> ParseMapsFromInput( string input ) {
 
+    List<Maps> maps = new();
     string[] mapsToParse = input[input.Split("\n")[0].Length..].Trim().Split("\n\n");
 
     foreach( string mapToParse in mapsToParse )
-        yield return new( mapToParse );
+        maps.Add( new( mapToParse ) );
+
+    return maps;
 }
 
-IEnumerable<int> GetLocation(IEnumerable<Maps> maps, int source) {
+int GetLocation(List<Maps> maps, int source) {
 
-    
+    int location = source;
+    foreach(Maps map in maps )
+        location = map.Map[location, 1];
+
+    return location;
 }
 
 #endregion
