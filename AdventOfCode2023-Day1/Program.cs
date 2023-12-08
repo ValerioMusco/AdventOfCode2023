@@ -24,7 +24,7 @@ using System.Text;
 
 #region Part2
 
-string path = @"C:\Users\Ugo est nul\Desktop\Prog\C#\AdventOfCode2023\AdventOfCode2023-Day1\SamplesPartTwo.txt";
+string path = @"C:\Users\Ugo est nul\Desktop\Prog\C#\AdventOfCode2023\AdventOfCode2023-Day1\TestValuesPartTwo.txt";
 
 List<string> inputs = GetFileContent(path);
 int leftDigit;
@@ -39,9 +39,12 @@ foreach( string input in inputs ) {
 
     newInput = ReplaceWithNumericValues( input );
 
+    Console.WriteLine(newInput);
+
     GetDigits( newInput, ref leftDigit, ref rightDigit );
     sum += leftDigit * 10 + ( rightDigit == -1 ? leftDigit : rightDigit );
 }
+
 
 Console.WriteLine(sum);
 #endregion
