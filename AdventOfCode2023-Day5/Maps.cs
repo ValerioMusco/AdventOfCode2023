@@ -44,7 +44,7 @@ namespace AdventOfCode2023_Day5 {
 
             Map = new long[max > SourceRangeStart.Max() + RangeLength.Max() ? max : SourceRangeStart.Max() + RangeLength.Max(), 2];
 
-            for( long i = 0; i < Map.Length/2; i++ ) {
+            for( long i = 0; i < (Map.LongLength)/2; i++ ) {
 
                 Map[i, 0] = i;
                 Map[i, 1] = i;
