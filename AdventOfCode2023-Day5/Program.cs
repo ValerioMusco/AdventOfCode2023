@@ -33,6 +33,8 @@ long location;
 
 #endregion
 
+// Fixer la boucle pour avoir les ranges correcte.
+// Puis réexecuter l'algo du dessus
 for(int i = 0; i < seeds.Count / 2; i++ ) {
 
     for(int j = 0; j < seeds[i+1 * 2]; j++ ) {
