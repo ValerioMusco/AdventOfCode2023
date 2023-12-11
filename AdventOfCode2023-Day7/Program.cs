@@ -16,9 +16,9 @@ foreach(string game in games ) {
     hands.Add( new(hand), bid );
 }
 
-hands = hands.OrderBy( h => h.Key.State )
+hands = hands.OrderBy( h => h.Key.State ) // Resultat attendu 765, 220, 28, 684, 483
             //.OrderBy( h => h.Key.Hand )
-            .ToDictionary(h => h.Key, h => h.Value);
+            .ToDictionary( h => h.Key, h => h.Value );
 
 int i = 1;
 foreach(int value in hands.Values) {
