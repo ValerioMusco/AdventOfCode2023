@@ -1,13 +1,15 @@
 ﻿using AdventOfCode2023_Day5;
+using System.Data;
+using System.Data.SqlClient;
 
-string path = @"E:\Progra\C#\AdventOfCode2023\AdventOfCode2023-Day5\TestValue.txt";
+string path = @"C:\Users\Ugo est nul\Desktop\Prog\C#\AdventOfCode2023\AdventOfCode2023-Day5\Sample.txt";
 
 string input = GetFileContent(path);
 
 List<long> seeds = ParseSeedsFromInput(input);
 List<Maps> maps = ParseMapsFromInput( input );
 
-List<long>  locations = new();
+long  lowestLocation = long.MaxValue;
 long location;
 
 #region Part 1
@@ -17,8 +19,8 @@ long location;
 //    location = seed;
 //    long tempValueToSubstract = seed;
 
-//    foreach(Maps map in maps ) 
-//        for( int i = 0; i < map.RangeLength.Count; i++ ) 
+//    foreach( Maps map in maps )
+//        for( int i = 0; i < map.RangeLength.Count; i++ )
 //            if( location > map.SourceRangeStart[i] && location <= map.SourceRangeStart[i] + map.RangeLength[i] - 1 ) {
 
 //                tempValueToSubstract = map.SourceRangeStart[i] + map.RangeLength[i] - 1 - location;
@@ -35,16 +37,31 @@ long location;
 
 // Fixer la boucle pour avoir les ranges correcte.
 // Puis réexecuter l'algo du dessus
-for(int i = 0; i < seeds.Count / 2; i++ ) {
+for( int i = 0; i <= seeds.Count / 2 - 1; i++ ) {
 
-    for(int j = 0; j < seeds[i+1 * 2]; j++ ) {
-        Console.Write( seeds[i * 2] + j  + " ");
+
+    Console.WriteLine( $"--- Test item {seeds[i * 2]} ---" );
+    for( int j = 0; j < seeds[i * 2 + 1]; j++ ) {
+
+        location = seeds[i * 2] + j;
+        long tempValueToSubstract;
+
+        foreach( Maps map in maps )
+            for( int k = 0; k < map.RangeLength.Count; k++ )
+                if( location > map.SourceRangeStart[k] && location <= map.SourceRangeStart[k] + map.RangeLength[k] - 1 ) {
+
+                    tempValueToSubstract = map.SourceRangeStart[k] + map.RangeLength[k] - 1 - location;
+                    location = map.DestinationRangeStart[k] + map.RangeLength[k] - 1;
+                    location -= tempValueToSubstract;
+                    tempValueToSubstract = location;
+                    break;
+                }
+
+        lowestLocation = location < lowestLocation ? location : lowestLocation;
     }
 
-    Console.WriteLine();
 }
-
-//Console.WriteLine(locations.Min());
+Console.WriteLine( lowestLocation );
 
 #region Methods
 static string GetFileContent( string path ) {
@@ -66,7 +83,7 @@ List<long> ParseSeedsFromInput( string input ) {
     string[] seedsValue = input.Split("\n")[0].Split(": ")[1].Split(' ');
 
     foreach( string seed in seedsValue )
-        seeds.Add(long.Parse(seed));
+        seeds.Add( long.Parse( seed ) );
 
     return seeds;
 }
