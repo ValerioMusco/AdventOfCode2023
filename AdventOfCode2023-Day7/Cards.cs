@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 namespace AdventOfCode2023_Day7 {
     public enum Cards {
 
+        Jack = 0,
         Two = 1,
         Three = 2,
         Four = 3,
@@ -16,7 +17,7 @@ namespace AdventOfCode2023_Day7 {
         Eight = 7,
         Nine = 8,
         Ten = 9,
-        Jack = 10,
+        // Jack = 10 Part1
         Queen = 11,
         King = 12,
         Ace = 13

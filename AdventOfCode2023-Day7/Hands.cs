@@ -22,8 +22,14 @@ namespace AdventOfCode2023_Day7 {
 
 
         public List<Cards> Hand { get; set; }
-
         public WinningState State { get; set; }
+
+        public void PrintHand() {
+
+            foreach(Cards cards in Hand )
+                Console.Write( cards.ToString());
+            Console.Write( " => " + State.ToString());
+        }
         private static Cards GetEnumValue( char card ) {
 
             return card switch {
@@ -45,24 +51,46 @@ namespace AdventOfCode2023_Day7 {
         }
         private WinningState GetWinningState() {
 
-            switch(Hand.Distinct().Count()) {
+            //switch(Hand.Distinct().Count()) { Part 1
+            List<Cards> skippedCards = new() {
+                Cards.Jack
+            };
+
+            if( Hand.Count( c => c == Cards.Jack ) == 5 )
+                return WinningState.FiveOfAKind;
+
+            switch( Hand.Except( skippedCards ).Distinct().Count() ) {
 
                 case 1:
                     return WinningState.FiveOfAKind;
                 case 2:
-                    foreach( Cards card in Hand.Distinct() ) {
-                        if( Hand.Where( c => c == card ).Count() == 1 )
-                            return WinningState.FourOfAKind;
-                        return WinningState.FullHouse;
-                    }
-                    break;
+
+                    bool isFourOfAKind = false;
+
+                    //foreach( Cards card in Hand.Distinct() ) // Part1
+                    foreach( Cards card in Hand.Except( skippedCards ).Distinct() ) // Part2
+                            if( Hand.Where( c => c == card ).Count() + Hand.Count( c => c == Cards.Jack ) == 4 ) {
+
+                            isFourOfAKind = true;
+                            break;
+                        }
+                    
+                    if( isFourOfAKind )
+                        return WinningState.FourOfAKind;
+                    return WinningState.FullHouse;
                 case 3:
-                    foreach( Cards card in Hand.Distinct() ) {
-                        if( Hand.Where( c => c == card ).Count() == 3 )
-                            return WinningState.ThreeOfAKind;
-                        return WinningState.TwoPair;
-                    }
-                    break;
+                    bool isThreeOfAKind = false;
+                    //foreach( Cards card in Hand.Distinct() ) // Part1
+                    foreach( Cards card in Hand.Except( skippedCards ).Distinct() ) // Part2
+                            if( Hand.Where( c => c == card ).Count() + Hand.Count( c => c == Cards.Jack ) == 3 ) {
+
+                            isThreeOfAKind = true;
+                            break;
+                        }
+
+                    if( isThreeOfAKind )
+                        return WinningState.ThreeOfAKind;
+                    return WinningState.TwoPair;
                 case 4:
                     return WinningState.OnePair;
                 default:
